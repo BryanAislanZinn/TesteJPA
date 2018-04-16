@@ -1,0 +1,64 @@
+/*C1*/SET SCHEMA SYSTEM_LOBS
+INSERT INTO BLOCKS VALUES(0,2147483647,0)
+COMMIT
+/*C2*/SET SCHEMA PUBLIC
+\u000d\u000a    drop table Diaria if exists
+\u000d\u000a    drop table Endereco if exists
+\u000d\u000a    drop table Pessoa if exists
+\u000d\u000a    drop table Pessoa_Diaria if exists
+\u000d\u000a    drop table Quarto if exists
+\u000d\u000a    drop table Reserva if exists
+\u000d\u000a    drop table Usuario if exists
+\u000d\u000a    drop sequence hibernate_sequence if exists
+create sequence hibernate_sequence start with 1 increment by 1
+\u000d\u000a    create table Diaria (\u000d\u000a       Tipo_Diaria varchar(31) not null,\u000d\u000a        id bigint not null,\u000d\u000a        data timestamp,\u000d\u000a        quarto_id bigint,\u000d\u000a        reserva_id bigint,\u000d\u000a        pessoa_id bigint,\u000d\u000a        primary key (id)\u000d\u000a    )
+\u000d\u000a    create table Endereco (\u000d\u000a       id bigint not null,\u000d\u000a        cep varchar(255),\u000d\u000a        complemento varchar(255),\u000d\u000a        logradouro varchar(255),\u000d\u000a        numero integer,\u000d\u000a        primary key (id)\u000d\u000a    )
+\u000d\u000a    create table Pessoa (\u000d\u000a       Tipo_Pessoa varchar(31) not null,\u000d\u000a        id bigint not null,\u000d\u000a        email varchar(255),\u000d\u000a        nome varchar(255),\u000d\u000a        telefone varchar(255),\u000d\u000a        cpf varchar(255),\u000d\u000a        dataNascimento timestamp,\u000d\u000a        rg varchar(255),\u000d\u000a        sexo varchar(255),\u000d\u000a        cnpj varchar(255),\u000d\u000a        inscricaoEstadual varchar(255),\u000d\u000a        inscricaoMunicipal varchar(255),\u000d\u000a        razaoSocial varchar(255),\u000d\u000a        endereco_id bigint,\u000d\u000a        primary key (id)\u000d\u000a    )
+\u000d\u000a    create table Pessoa_Diaria (\u000d\u000a       hospedes_id bigint not null,\u000d\u000a        diarias_id bigint not null\u000d\u000a    )
+\u000d\u000a    create table Quarto (\u000d\u000a       id bigint not null,\u000d\u000a        numero varchar(255),\u000d\u000a        tipoDeQuarto varchar(255),\u000d\u000a        primary key (id)\u000d\u000a    )
+\u000d\u000a    create table Reserva (\u000d\u000a       id bigint not null,\u000d\u000a        data timestamp,\u000d\u000a        valor double,\u000d\u000a        pessoa_id bigint,\u000d\u000a        primary key (id)\u000d\u000a    )
+\u000d\u000a    create table Usuario (\u000d\u000a       id bigint not null,\u000d\u000a        email varchar(255),\u000d\u000a        endereco varchar(255),\u000d\u000a        senha varchar(255),\u000d\u000a        primary key (id)\u000d\u000a    )
+\u000d\u000a    alter table Diaria \u000d\u000a       add constraint FKnpyqw55ty9j32txletiv0gedv \u000d\u000a       foreign key (quarto_id) \u000d\u000a       references Quarto
+\u000d\u000a    alter table Diaria \u000d\u000a       add constraint FKm59xgo0wb7yj8t2a873gxvnji \u000d\u000a       foreign key (reserva_id) \u000d\u000a       references Reserva
+\u000d\u000a    alter table Diaria \u000d\u000a       add constraint FKgim212l37p5pgf9vr4m5lt40j \u000d\u000a       foreign key (pessoa_id) \u000d\u000a       references Pessoa
+\u000d\u000a    alter table Pessoa \u000d\u000a       add constraint FKetlggxage7ixu17gaf2nx53ij \u000d\u000a       foreign key (endereco_id) \u000d\u000a       references Endereco
+\u000d\u000a    alter table Pessoa_Diaria \u000d\u000a       add constraint FKdh7oax23gmyirstk6bgo5b25o \u000d\u000a       foreign key (diarias_id) \u000d\u000a       references Diaria
+\u000d\u000a    alter table Pessoa_Diaria \u000d\u000a       add constraint FKpdtumire0jdp69c0raxk3eihn \u000d\u000a       foreign key (hospedes_id) \u000d\u000a       references Pessoa
+\u000d\u000a    alter table Reserva \u000d\u000a       add constraint FK3a8eavqu6ol8h7fqd7wqokpy3 \u000d\u000a       foreign key (pessoa_id) \u000d\u000a       references Pessoa
+INSERT INTO USUARIO VALUES(1,'email@do.usuario','endereco','senha')
+ALTER SEQUENCE PUBLIC.HIBERNATE_SEQUENCE RESTART WITH 2
+COMMIT
+/*C3*/SET SCHEMA PUBLIC
+INSERT INTO USUARIO VALUES(2,NULL,NULL,NULL)
+ALTER SEQUENCE PUBLIC.HIBERNATE_SEQUENCE RESTART WITH 3
+COMMIT
+INSERT INTO USUARIO VALUES(3,NULL,NULL,NULL)
+ALTER SEQUENCE PUBLIC.HIBERNATE_SEQUENCE RESTART WITH 4
+COMMIT
+INSERT INTO USUARIO VALUES(4,'email','endereco','senha')
+ALTER SEQUENCE PUBLIC.HIBERNATE_SEQUENCE RESTART WITH 5
+COMMIT
+/*C4*/SET SCHEMA PUBLIC
+INSERT INTO USUARIO VALUES(5,'emailDeAtualizacao','endereco','senha')
+ALTER SEQUENCE PUBLIC.HIBERNATE_SEQUENCE RESTART WITH 6
+COMMIT
+DELETE FROM USUARIO WHERE ID=5
+INSERT INTO USUARIO VALUES(5,'agora_mudou_o_email','endereco','senha')
+COMMIT
+/*C5*/SET SCHEMA PUBLIC
+INSERT INTO USUARIO VALUES(6,'emailDeExclusao','endereco','senha')
+ALTER SEQUENCE PUBLIC.HIBERNATE_SEQUENCE RESTART WITH 7
+COMMIT
+DELETE FROM USUARIO WHERE ID=6
+COMMIT
+/*C6*/SET SCHEMA PUBLIC
+INSERT INTO USUARIO VALUES(7,'email.do@usuario.com','endereco','senha123')
+ALTER SEQUENCE PUBLIC.HIBERNATE_SEQUENCE RESTART WITH 8
+COMMIT
+/*C3*/DISCONNECT
+/*C2*/DISCONNECT
+/*C6*/DISCONNECT
+/*C4*/DISCONNECT
+/*C5*/DISCONNECT
+/*C7*/SET SCHEMA PUBLIC
+DISCONNECT
